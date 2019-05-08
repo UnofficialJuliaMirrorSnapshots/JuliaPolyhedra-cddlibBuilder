@@ -1,0 +1,32 @@
+language: julia
+os:
+- linux
+julia:
+- 1.0
+notifications:
+  email: false
+git:
+  depth: 99999999
+cache:
+  timeout: 1000
+  directories:
+  - downloads
+env:
+  global:
+  - BINARYBUILDER_DOWNLOADS_CACHE=downloads
+  - BINARYBUILDER_AUTOMATIC_APPLE=true
+sudo: required
+before_script:
+- julia -e 'using Pkg; pkg"add BinaryProvider"; pkg"add BinaryBuilder#master"; Pkg.build()'
+script:
+- julia  --color=yes build_tarballs.jl
+deploy:
+  provider: releases
+  api_key:
+    secure: DP+0XXH2rB+EXfrTFuJ7T0/1Ktu6v1tHmHPFVCLpA2YOtN1mcW83QMLn7UZgZwV1GqLjWZV9bxgR6LIEy3E0TBrOaVpIGybFdPeSoqq9fCmU+/83snmEDNkIxC9ZFuNRW5K+A1w6nObE2ZtGY2g23zC1aKhmTj3fIVyLi9VoMbZP/KEIo6hD22uQot58/or0/log8I87grcf2mB1+MaGsLh6OFUgZ67BihCjUthMYan3yJYT6fCCNc05XFxKNdgee+Bru76qW0+3A7YajAbczJpX20xbvcHSn/ESH6idy5bslomEAki1DqNmTMh+fn+gB5wWnEv0n6jHR84Me2olXJS5fGjYEAm0wujqVZ7nzX6HESol/nn0B06aUHgRBhktsVZBqQKE0IBhXBby9HbQicvLuztf0js3NPcc5ryna+r19Zi9KqYL95hOLOPWzBGzPJT0S2nz6JDyMVDZTBL6WzdpyKg9+ToHrLmAiFNkBEW53qHn/CQnSTDV3fRVQbvzCo8jRt5T4or+eSiZjD/IcUuHpk8EOdR3O9fQiSokJ1EZDQ2/L4DXaBaTb7fcWF+Qkr7CcgeEMd8a6uwZ3bm79k7NogjBhnDWDoAuCR1AoPtVtlF7Uuq5EvEtzW4Oi9SXRtOiWzYBJpg4Hpd8H7la1i8lj9EtCkNekqCUOujS0qU=
+  file_glob: true
+  file: products/*
+  skip_cleanup: true
+  on:
+    repo: JuliaPolyhedra/cddlibBuilder
+    tags: true
